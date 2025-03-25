@@ -234,11 +234,31 @@ def sign_up_page():
                             )
                             conn.commit()
                             
-                            # Vider le formulaire après l'enregistrement réussi
-                            st.session_state.form_data = {key: '' for key in st.session_state.form_data}
-                            st.session_state.form_data['is_active'] = 'Yes'
-                            st.session_state.form_data['role_name'] = 'Agent'
-                            
+
+                            st.write("Avant réinitialisation:")
+                            for key, value in st.session_state.form_data.items():
+                                st.write(f"{key}: {value}")
+                                                        # Vider le formulaire après l'enregistrement réussi
+                           # Après l'enregistrement réussi, réinitialiser complètement les données du formulaire
+                            st.session_state.form_data.clear()  # Effacer les données existantes
+                            st.session_state.form_data.update({
+                                'ClientName': '',
+                                'username': '',
+                                'email': '',
+                                'address': '',
+                                'is_active': 'Yes',  # Valeur par défaut
+                                'identifier': '',
+                                'phone_number': '',
+                                'role_name': 'Agent',  # Rôle par défaut
+                                'assigned_city': '',
+                                "password_hash":'',
+                            })
+
+                            # Après réinitialisation
+                            st.write("\nAprès réinitialisation:")
+                            for key, value in st.session_state.form_data.items():
+                                st.write(f"{key}: {value}")
+                                            
                             # Définir le flag de succès à True pour afficher le message sur le prochain rendu
                             st.session_state.registration_success = True
                             

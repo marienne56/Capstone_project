@@ -249,7 +249,7 @@ def main():
             
             # Traitement spécial pour les agents
             if user_role == "Agent":
-                st.write("Agent role detected")
+                #st.write("Agent role detected")
                 # Query the database to get the assigned city for this agent
                 try:
                     engine = get_connection()
@@ -260,7 +260,7 @@ def main():
                             assigned_city = result[0]
                             
                             # Afficher la ville assignée pour débogage
-                            st.write(f"Agent assigned to city: '{assigned_city}'")
+                            #st.write(f"Agent assigned to city: '{assigned_city}'")
                             
                             # Vérifier si la colonne 'Ville' existe
                             if 'Ville' not in df_filtered.columns:
@@ -268,7 +268,7 @@ def main():
                             else:
                                 # Afficher les villes disponibles avant filtrage
                                 available_cities = df_filtered['Ville'].unique()
-                                st.write(f"Available cities in data: {available_cities}")
+                                #st.write(f"Available cities in data: {available_cities}")
                                 
                                 # Approche 1: Correspondance exacte (insensible à la casse)
                                 mask_exact = df_filtered['Ville'].str.lower() == assigned_city.lower()
@@ -280,20 +280,20 @@ def main():
                                 mask_startswith = df_filtered['Ville'].str.lower().str.startswith(assigned_city.lower())
                                 
                                 # Vérifier les résultats de chaque approche
-                                st.write(f"Exact matches: {sum(mask_exact)}")
-                                st.write(f"Partial matches: {sum(mask_partial)}")
-                                st.write(f"Starts with matches: {sum(mask_startswith)}")
+                                # st.write(f"Exact matches: {sum(mask_exact)}")
+                                # st.write(f"Partial matches: {sum(mask_partial)}")
+                                # st.write(f"Starts with matches: {sum(mask_startswith)}")
                                 
                                 # Utiliser la meilleure approche disponible
                                 if sum(mask_exact) > 0:
                                     df_filtered = df_filtered[mask_exact]
-                                    st.success(f"Using exact matches for '{assigned_city}'")
+                                    #st.success(f"Using exact matches for '{assigned_city}'")
                                 elif sum(mask_partial) > 0:
                                     df_filtered = df_filtered[mask_partial]
-                                    st.success(f"Using partial matches for '{assigned_city}'")
+                                    #st.success(f"Using partial matches for '{assigned_city}'")
                                 elif sum(mask_startswith) > 0:
                                     df_filtered = df_filtered[mask_startswith]
-                                    st.success(f"Using 'starts with' matches for '{assigned_city}'")
+                                    #st.success(f"Using 'starts with' matches for '{assigned_city}'")
                                 else:
                                     # Si aucune correspondance n'est trouvée, afficher un avertissement
                                     st.warning(f"No matching cities found for '{assigned_city}'. Using all available data.")
@@ -302,7 +302,7 @@ def main():
                                 if not df_filtered.empty:
                                     # Récupérer la liste des identifiants de clients de cette ville
                                     client_identifiers = sorted(df_filtered['identifier'].unique())
-                                    st.write(f"Found {len(client_identifiers)} clients in {assigned_city}")
+                                    #st.write(f"Found {len(client_identifiers)} clients in {assigned_city}")
                                     
                                     # Ajouter un sélecteur dans la sidebar pour choisir un client spécifique
                                     st.sidebar.write("### Clients in your assigned city")
@@ -318,8 +318,8 @@ def main():
                                         if selected_client != "All clients":
                                             df_filtered = df_filtered[df_filtered['identifier'] == selected_client]
                                             st.success(f"Showing predictions for client: {selected_client}")
-                                    else:
-                                        st.success(f"Showing aggregated predictions for all clients in {assigned_city}")
+                                    #else:
+                                        #st.success(f"Showing aggregated predictions for all clients in {assigned_city}")
                 except Exception as e:
                     st.error(f"Error retrieving or processing assigned city: {str(e)}")
                     st.exception(e)  # Affiche la trace complète de l'erreur

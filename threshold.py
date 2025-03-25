@@ -113,19 +113,27 @@ def send_billing_alert_email(to_email, subject, message):
     try:
         import requests
         import json
+        import socket
         
-        # Vos clés Mailjet
+        # Mailjet credentials
         api_key = "9db4d134407c233f94673231a25ba13b"
         api_secret = "01e7c939ad6d27232be24fa641e48e23"
         
         url = "https://api.mailjet.com/v3.1/send"
         
-        # Préparer les données de l'email
+        # Check internet connectivity before sending
+        try:
+            socket.create_connection(("www.google.com", 80))
+        except (socket.error, socket.timeout):
+            st.error("❌ No internet connection. Please check your network settings.")
+            return False
+        
+        # Prepare email data
         data = {
             'Messages': [
                 {
                     "From": {
-                        "Email": "mariennedosso@gmail.com",  # Doit être une adresse vérifiée dans votre compte Mailjet
+                        "Email": "mariennedosso@gmail.com",  # Must be a verified email in your Mailjet account
                         "Name": "Water Consumption Alert"
                     },
                     "To": [
@@ -140,25 +148,25 @@ def send_billing_alert_email(to_email, subject, message):
             ]
         }
         
-        # Envoyer la requête à l'API Mailjet
+        # Send request to Mailjet API
         response = requests.post(
             url,
             auth=(api_key, api_secret),
             json=data
         )
         
-        # Vérifier la réponse
+        # Check response
         if response.status_code == 200:
-            #st.success(f"📧 Alert email sent to {to_email}")
             return True
         else:
-            st.error(f"Failed to send email. Status code: {response.status_code}, Response: {response.text}")
+            st.error("❌ Failed to send email. Network or server error.")
             return False
             
+    except requests.exceptions.ConnectionError:
+        st.error("❌ Unable to connect to email server. Check your internet connection.")
+        return False
     except Exception as e:
-        st.error(f"Failed to send email: {e}")
-        import traceback
-        st.error(traceback.format_exc())
+        st.error(f"❌ Unexpected error sending email: {e}")
         return False
 def create_alert(user_identifier, alert_type, message, prediction_id=None):
     """Create an alert in the alert table."""

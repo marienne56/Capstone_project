@@ -281,7 +281,7 @@ def dashboard():
                 if df.empty:
                     st.warning(f"⚠️ No data found for identifier {selected_identifier}.")
                     return
-                st.info(f"ℹ️ Displaying data for user with identifier: {selected_identifier}")
+                #st.info(f"ℹ️ Displaying data for user with identifier: {selected_identifier}")
         else:
             # Pour les utilisateurs non-admin et non-agent, l'identifiant est toujours le leur
             selected_identifier = identifier
@@ -397,7 +397,7 @@ def dashboard():
         
         # Check if we have data after filtering
         if df_filtered.empty:
-            st.warning("⚠️ No data matches the selected filters.")
+            st.warning("⚠️ No data matches the selected filterss.")
             return
         
         # Display information about applied filters

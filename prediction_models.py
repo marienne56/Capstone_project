@@ -1215,10 +1215,10 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
         st.warning(f"Period format'{prediction_timeframe}' not recognized.")
         return None, None, None, None
     
-    # Afficher les valeurs moyennes par période pour analyse
-    agg_data = df.groupby(period_column)['Conso'].mean().reset_index()
-    #st.write("Consommation moyenne par période:")
-    st.table(agg_data)
+    # # Afficher les valeurs moyennes par période pour analyse
+    # agg_data = df.groupby(period_column)['Conso'].mean().reset_index()
+    # #st.write("Consommation moyenne par période:")
+    # st.table(agg_data)
     
     # Déterminer la période actuelle et la période suivante
     current_year = selected_year
@@ -3051,10 +3051,10 @@ def prediction_dashboard(df_filtered, selected_user, selected_year, prediction_t
     prenant en compte les modifications apportées aux fonctions de prédiction.
     """
     # Titre de la section
-    st.write("jfj")
+    
     # Afficher l'information sur l'utilisateur et l'year sélectionnée
-    if selected_user != "All users":
-        st.write(f"**👤 User:** {selected_user}")
+    # if selected_user != "All users":
+    #     st.write(f"**👤 User:** {selected_user}")
     
     # Afficher l'year sélectionnée
     st.write(f"**📅 Reference year:** {selected_year}")
