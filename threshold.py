@@ -392,57 +392,13 @@ def display_threshold_management(selected_user):
         col1, col2 = st.columns(2)
         with col1:
             submit = st.form_submit_button("Save Threshold")
-        # with col2:
-        #     reset = st.form_submit_button("Reset Threshold")
+       
         
         if submit:
             #result = 
             result =set_billing_threshold(selected_user, new_threshold)
             
             st.success(result)
-            # import time
-            # time.sleep(15) 
-            # Use st.rerun() instead of st.experimental_rerun()
+            
             st.rerun()
         
-        # if reset:
-        #     result = reset_billing_threshold(selected_user)
-        #     st.success(result)
-        #     # Use st.rerun() instead of st.experimental_rerun()
-        #     st.rerun()
-    
-    # Explain threshold system
-    # st.write("### ℹ️ About Billing Thresholds")
-    # st.write("""
-    # Setting a billing threshold allows you to be notified when:
-    
-    # - The predicted billing amount for the next period exceeds your threshold
-    # - The system will send you an email alert if your email is configured
-    
-    # This helps you monitor and manage your water consumption costs proactively.
-    # """)
-    
-    # # Check user email status
-    # user_email = get_user_email(selected_user)
-    # if user_email:
-    #     st.success(f"Email notifications will be sent to: **{user_email}**")
-    # else:
-    #     st.warning("No email configured for notifications. Please contact support to add your email.")
-    
-    # Display recent alerts
-    # st.write("### 📬 Recent Billing Alerts")
-    
-    # alerts_df = get_user_alerts(selected_user)
-    
-    # if not alerts_df.empty:
-    #     # Format the dataframe for display
-    #     alerts_df['Type'] = alerts_df['alert_type'].apply(
-    #         lambda x: "Threshold Exceeded" if x == "billing_threshold" else "Significant Increase"
-    #     )
-    #     alerts_df['Message'] = alerts_df['message']
-    #     alerts_df['Date'] = pd.to_datetime(alerts_df['created_at']).dt.strftime('%Y-%m-%d %H:%M')
-        
-    #     # Display the table
-    #     st.table(alerts_df[['Type', 'Message', 'Date']])
-    # else:
-    #     st.info("No recent billing alerts found.")

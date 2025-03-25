@@ -54,14 +54,13 @@ st.markdown("""
 def sign_up_page():
  
     if "page" not in st.session_state:
-        st.session_state.page = "sign_up"  # Page par défaut
+        st.session_state.page = "sign_up" 
 
 
  
-    # Title of the application
+  
     st.title("User Registration Form")
 
-    # Ajout d'une clé pour le message de succès persistant
     if 'registration_success' not in st.session_state:
         st.session_state.registration_success = False
 
@@ -102,7 +101,7 @@ def sign_up_page():
             password = st.text_input("Password", type="password")
             confirm_password = st.text_input("Confirm Password", type="password")
         
-        # Définir les index pour le selectbox
+        
         role_options = ["Agent", "Admin"]
         role_index = role_options.index(st.session_state.form_data['role_name']) if st.session_state.form_data['role_name'] in role_options else 0
         

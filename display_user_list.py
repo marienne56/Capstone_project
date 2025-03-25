@@ -33,10 +33,7 @@ def get_role_name(role_id):
         st.error(f"Erreur lors de la récupération du rôle: {e}")
         return "Unknown"
 
-# Vérifier si l'utilisateur est connecté
-#if "logged_in" not in st.session_state or not st.session_state.logged_in:
-    #st.error("You must be logged in to access this page.")
-    #st.stop()
+
 
 # Stocker le rôle de l'utilisateur
 if "role_id" in st.session_state:
@@ -47,8 +44,7 @@ if "role_id" in st.session_state:
 if "role_name" not in st.session_state:
     st.session_state.role_name = "Unknown"
 
-# if "role_name" not in st.session_state:
-#     st.session_state.role_name = None  # Ou une valeur par défaut, comme "User"
+
 
 # Safely display role_name
 #st.write(f"Role Name: {st.session_state.get('role_name', 'Unknown')}")
@@ -56,16 +52,7 @@ def display_users_list():
     if "identifier" not in st.session_state:
         st.session_state.identifier = None  # ou une valeur par défaut
 
-    # if st.session_state.page == "view":
-    #     view_profil(st.session_state.edit_user_identifier)
-    #     st.stop()  # Empêche l'affichage du reste de la page
-
-
-    #st.write(f"Current identifier: {st.session_state.identifier}")
-
-
-
-    #st.write(f"Role Name: {st.session_state.role_name}")
+    
 
     if "page_number" not in st.session_state:
         st.session_state.page_number = 1  # Valeur par défaut
@@ -135,12 +122,8 @@ def display_users_list():
             col1, col2, col3 = st.columns(3)
             with col1:
                 if st.button("👁️", key=f"view_{row['identifier']}"):
-                    # st.write(f"Clicked view for {row['identifier']}")
-                    # st.write("Current page before rerun:", st.session_state.page)  # Débogage
-                    # st.write(f"Current identifier: {st.session_state.identifier}")
-
-                    #view_profil(row["identifier"])
-                    # if st.session_state.page != "view":  # Vérifiez si vous n'êtes pas déjà sur la page "view"
+                    
+                   
                     st.write(f"Identifiant stocké: {st.session_state.get('edit_user_identifier', 'Aucun')}")
     
                     st.session_state["edit_user_identifier"] = row["identifier"]  # Assure-toi de sauvegarder l'identifiant

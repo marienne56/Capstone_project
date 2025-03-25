@@ -3,13 +3,13 @@ from dbConnection import get_connection
 from sqlalchemy import text
 import streamlit as st
 
-# Initialisation du numéro de page
+
 if "page_number" not in st.session_state:
         st.session_state.page_number = 1 
     
-    # Vérifier si la page est définie dans le session_state
+    
 if "page" not in st.session_state:
-        st.session_state.page = "list"  # Page par défaut
+        st.session_state.page = "list"  # Default page
 
 
 if "page" not in st.session_state:
@@ -34,7 +34,7 @@ def fetch_user(identifier):
                 WHERE users.identifier = :identifier
             ''')
 
-            # Remplacement de ':identifier' par l'argument du paramètre
+            
             df = pd.read_sql(query, conn, params={"identifier": identifier})
 
         if df.empty:
@@ -76,7 +76,7 @@ JOIN
     
 
 
-# Fonction pour récupérer les utilisateurs avec pagination
+# fonction to collect users by pagination
 def fetch_users(page_number=None, search_query=None):
     try:
         engine = get_connection()

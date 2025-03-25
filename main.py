@@ -158,14 +158,6 @@ def main():
         if user_details is not None and isinstance(user_details, pd.Series):
             client_name = user_details["ClientName"]
             
-            # # Vérifier si l'utilisateur est admin
-            # is_admin = check_admin_permission(st.session_state.identifier)
-            
-            # # Afficher l'en-tête
-            # if is_admin:
-            #     st.sidebar.header(f"Welcome, Admin :violet[{client_name}]!")
-            # else:
-            #     st.sidebar.header(f"Welcome, :violet[{client_name}]!")
             
             # Titre de la page
             st.title("🔮 Prediction of data consumption of a SODECI client")
@@ -279,10 +271,6 @@ def main():
                                 # Approche 3: Correspondance avec la première partie du nom
                                 mask_startswith = df_filtered['Ville'].str.lower().str.startswith(assigned_city.lower())
                                 
-                                # Vérifier les résultats de chaque approche
-                                # st.write(f"Exact matches: {sum(mask_exact)}")
-                                # st.write(f"Partial matches: {sum(mask_partial)}")
-                                # st.write(f"Starts with matches: {sum(mask_startswith)}")
                                 
                                 # Utiliser la meilleure approche disponible
                                 if sum(mask_exact) > 0:
