@@ -85,7 +85,7 @@ def sign_up_page():
         st.session_state.registration_success = False
 
     # Formulaire avec clear_on_submit=False
-    with st.form("registration_form", clear_on_submit=False):
+    with st.form("registration_form", clear_on_submit=True):
         col1, col2 = st.columns(2)
         
         with col1:
