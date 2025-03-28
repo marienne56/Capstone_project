@@ -31,8 +31,17 @@ def login_page():
     # Remove redundant session state initialization since it's already handled above
     if "page" not in st.session_state or st.session_state.page not in ["sign_up", "login", "home", "sign_upp", "display", "update", "forgot_password"]:
         st.session_state.page = "login"
+    
+    # Créer deux colonnes
+    col1, col2 = st.columns([3, 1])  # Ajuste les proportions si nécessaire
 
-    st.title("Let's :violet[Login]")
+    # Ajouter le titre dans la première colonne
+    with col1:
+        st.title("Hello! Let's :violet[Login]")
+
+    # Ajouter l'image dans la deuxième colonne
+    with col2:
+        st.image("images/image.png", width=60)
 
     # Formulaire de connexion
     with st.form("login_form", clear_on_submit=True):

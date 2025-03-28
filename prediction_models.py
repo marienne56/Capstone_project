@@ -1632,7 +1632,7 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
                         #st.info(f"📧 An alert email has been sent to {user_email}")
                         alert_sent = True
                 else:
-                    st.warning("⚠️ No email configured for this user. Alert created but email not sent.")
+                    st.warning("⚠️ No email configured for this user. There is an alert but email is not sent.")
             else:
                 st.success(f"✅ Your current billing is below your threshold ({(current_billing / user_threshold * 100):.1f}% of threshold)")
         else:
@@ -1681,7 +1681,7 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
                             #st.info(f"📧 An alert email has been sent to {user_email}")
                             alert_sent = True
                     else:
-                        st.warning("⚠️ No email configured for this user. Alert created but email not sent.")
+                        st.warning("⚠️ No email configured for this user. There is an alert  but email is not sent.")
                 else:
                     st.success(f"✅ No significant increase detected. Predicted billing is only {percent_increase:.1f}% higher than current billing.")
             else:

@@ -129,6 +129,10 @@ def main():
     
     # À partir d'ici, l'utilisateur est connecté, afficher la sidebar
     with st.sidebar:
+
+        #st.logo( "images/gs2eci_logo.jpg", size="large", link=None, icon_image=None)
+        st.image("images/gs2eci_logo.jpg", width=60)
+
         # Récupérer les informations de l'utilisateur pour l'affichage
         if st.session_state.client_name:
         #     st.sidebar.write(f"Welcome, :violet[{st.session_state.client_name}]!")

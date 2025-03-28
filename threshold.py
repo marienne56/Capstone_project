@@ -174,7 +174,7 @@ def create_alert(user_identifier, alert_type, message, prediction_id=None):
         # Get user_id from identifier
         user_id = get_user_id_from_identifier(user_identifier)
         if not user_id:
-            st.error(f"Could not find user_id for identifier: {user_identifier}")
+            #st.error(f"Could not find user_id for identifier: {user_identifier}")
             return False
         
         # Debug messages
