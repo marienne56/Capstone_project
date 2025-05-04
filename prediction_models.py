@@ -318,8 +318,8 @@ def plot_residuals(y_true, y_pred, title="Analyse des résidus"):
 # Fonctions pour les métriques d'évaluation du modèle
 def evaluate_model(y_true, y_pred):
     """Calcule et retourne les métriques d'évaluation pour un modèle"""
-    mse = mean_squared_error(y_true, y_pred)
-    rmse = np.sqrt(mse)
+    # mse = mean_squared_error(y_true, y_pred)
+    # rmse = np.sqrt(mse)
     mae = mean_absolute_error(y_true, y_pred)
     r2 = r2_score(y_true, y_pred)
     
@@ -328,8 +328,8 @@ def evaluate_model(y_true, y_pred):
     mape = np.mean(np.abs((y_true[mask] - y_pred[mask]) / y_true[mask])) * 100 if np.any(mask) else np.nan
     
     return {
-        'MSE': mse,
-        'RMSE': rmse,
+        # 'MSE': mse,
+        # 'RMSE': rmse,
         'MAE': mae,
         'R²': r2,
         'MAPE (%)': mape
@@ -424,7 +424,7 @@ def plot_predicted_vs_actual(X, y_true, y_pred, title, x_label):
     st.plotly_chart(fig)
 
 def create_sidebar_filters(df, is_admin=False):
-    st.sidebar.markdown("## Filtres")
+    st.sidebar.markdown("## Filters")
     
     # Filtres communs pour tous les utilisateurs
     # Filtre Year
@@ -823,17 +823,7 @@ def apply_filters(df, selected_user, selected_year, selected_city, selected_clie
 
 
 def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
-    """
-    Simplified diagnostic function that only uses the Ridge model
-    and determines if the problem comes from the data.
-    
-    Args:
-        df_train: DataFrame containing training data
-        alpha: Regularization parameter for Ridge
-    
-    Returns:
-        dict: Diagnostic results
-    """
+   
     st.write("## 🔍 Ridge Model Diagnostic")
     
     # 1. DATA STRUCTURE ANALYSIS
@@ -956,15 +946,15 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
         from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
         
         train_metrics = {
-            'MSE': mean_squared_error(y_train, y_pred_train),
-            'RMSE': np.sqrt(mean_squared_error(y_train, y_pred_train)),
+            # 'MSE': mean_squared_error(y_train, y_pred_train),
+            # 'RMSE': np.sqrt(mean_squared_error(y_train, y_pred_train)),
             'MAE': mean_absolute_error(y_train, y_pred_train),
             'R²': r2_score(y_train, y_pred_train)
         }
         
         test_metrics = {
-            'MSE': mean_squared_error(y_test, y_pred_test),
-            'RMSE': np.sqrt(mean_squared_error(y_test, y_pred_test)),
+            # 'MSE': mean_squared_error(y_test, y_pred_test),
+            # 'RMSE': np.sqrt(mean_squared_error(y_test, y_pred_test)),
             'MAE': mean_absolute_error(y_test, y_pred_test),
             'R²': r2_score(y_test, y_pred_test)
         }
@@ -1013,10 +1003,16 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
             st.success(f"✅ **Good performance**: R² = {r2_test:.4f}. The model explains more than 60% of the variance.")
         
         # Analyze the gap between train and test
-        if r2_gap > 0.2:
-            st.warning(f"⚠️ **Possible overfitting**: Gap of {r2_gap:.4f} between training and test R².")
-        else:
+        if r2_gap <  0.05:
             st.success(f"✅ **No overfitting**: Acceptable gap of {r2_gap:.4f} between training and test R².")
+        elif 0.15 > r2_gap > 0.05:
+            st.success(f"✅ **Acceptable — some overfitting, but manageable**: Gap of {r2_gap:.4f} between training and test R².")
+        elif 0.2 > r2_gap > 0.15:
+            st.warning(f"⚠️ **Moderate overfitting — worth addressing**: Gap of {r2_gap:.4f} between training and test R².")
+        elif 0.2 < r2_gap:
+            st.warning(f"⚠️ **Strong overfitting — must be addressed**: Gap of {r2_gap:.4f} between training and test R².")
+        # else:
+        #     st.success(f"✅ **No overfitting**: Acceptable gap of {r2_gap:.4f} between training and test R².")
         
         # Analyze relative error
         if mae_relative > 50:
@@ -1048,8 +1044,8 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
         
         # Define custom scorers for CV
         r2_scorer = make_scorer(r2_score)
-        rmse_scorer = make_scorer(lambda y, y_pred: np.sqrt(mean_squared_error(y, y_pred)), 
-                                 greater_is_better=False)
+        # rmse_scorer = make_scorer(lambda y, y_pred: np.sqrt(mean_squared_error(y, y_pred)), 
+        #                          greater_is_better=False)
         mae_scorer = make_scorer(mean_absolute_error, greater_is_better=False)
         
         # Initialize KFold
@@ -1057,7 +1053,7 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
         
         # Lists to store metrics from each fold
         cv_r2_scores = []
-        cv_rmse_scores = []
+        #cv_rmse_scores = []
         cv_mae_scores = []
         
         # Perform cross-validation manually for detailed metrics
@@ -1075,23 +1071,23 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
             
             # Calculate metrics
             fold_r2 = r2_score(y_cv_test, y_cv_pred)
-            fold_rmse = np.sqrt(mean_squared_error(y_cv_test, y_cv_pred))
+            #fold_rmse = np.sqrt(mean_squared_error(y_cv_test, y_cv_pred))
             fold_mae = mean_absolute_error(y_cv_test, y_cv_pred)
             
             # Store metrics
             cv_r2_scores.append(fold_r2)
-            cv_rmse_scores.append(fold_rmse)
+            #cv_rmse_scores.append(fold_rmse)
             cv_mae_scores.append(fold_mae)
             
             # Display fold metrics
-            st.write(f"**Fold {fold_num}**: R² = {fold_r2:.4f}, RMSE = {fold_rmse:.4f}, MAE = {fold_mae:.4f}")
+            #st.write(f"**Fold {fold_num}**: R² = {fold_r2:.4f}, RMSE = {fold_rmse:.4f}, MAE = {fold_mae:.4f}")
             fold_num += 1
         
         # Calculate average CV metrics
         cv_avg_r2 = np.mean(cv_r2_scores)
         cv_std_r2 = np.std(cv_r2_scores)
-        cv_avg_rmse = np.mean(cv_rmse_scores)
-        cv_std_rmse = np.std(cv_rmse_scores)
+        # cv_avg_rmse = np.mean(cv_rmse_scores)
+        # cv_std_rmse = np.std(cv_rmse_scores)
         cv_avg_mae = np.mean(cv_mae_scores)
 
         # Calculate CV-based relative error
@@ -1111,26 +1107,26 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
         # Display average CV metrics
         st.write("#### Cross-Validation Summary")
         cv_metrics_df = pd.DataFrame({
-            'Métrique': ['R²', 'RMSE', 'MAE'],
-            'Moyenne': [cv_avg_r2, cv_avg_rmse, cv_avg_mae],
-            'Écart-type': [cv_std_r2, cv_std_rmse, cv_std_mae]
+            'Metric': ['R²', 'MAE'],
+            'Average': [cv_avg_r2,  cv_avg_mae],
+            'Standard deviation': [cv_std_r2, cv_std_mae]
         })
         st.table(cv_metrics_df.style.format({
-            'Moyenne': '{:.4f}',
-            'Écart-type': '{:.4f}'
+            'Average': '{:.4f}',
+            'Standard deviation': '{:.4f}'
         }))
         
         # Visualize CV results
         cv_results_df = pd.DataFrame({
             'Fold': list(range(1, actual_cv_folds + 1)),
             'R²': cv_r2_scores,
-            'RMSE': cv_rmse_scores,
+            #'RMSE': cv_rmse_scores,
             'MAE': cv_mae_scores
         })
         
         # Create a dataframe for plotting in long format
         plot_data = []
-        for metric in ['R²', 'RMSE', 'MAE']:
+        for metric in ['R²', 'MAE']:
             for fold, value in enumerate(cv_results_df[metric], 1):
                 plot_data.append({
                     'Fold': fold,
@@ -1155,18 +1151,18 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
         )
         st.plotly_chart(fig)
         
-        # Analyze CV stability
-        if cv_std_r2 > 0.15:
-            st.warning(f"⚠️ **High CV variability**: R² standard deviation of {cv_std_r2:.4f} indicates unstable model performance across different data subsets.")
-        else:
-            st.success(f"✅ **Stable CV performance**: R² standard deviation of {cv_std_r2:.4f} indicates consistent model performance across different data subsets.")
+        # # Analyze CV stability
+        # if cv_std_r2 > 0.15:
+        #     st.warning(f"⚠️ **High CV variability**: R² standard deviation of {cv_std_r2:.4f} indicates unstable model performance across different data subsets.")
+        # else:
+        #     st.success(f"✅ **Stable CV performance**: R² standard deviation of {cv_std_r2:.4f} indicates consistent model performance across different data subsets.")
         
        
 
-        # Warning if very low performance
-        if cv_avg_r2 < 0.2:
-            st.write("\n### ⚠️ Important note:")
-            st.write(f"With a cross-validated R² of {cv_avg_r2:.4f}, current predictions are **not reliable**. It is recommended to use these predictions with extreme caution.")
+        # # Warning if very low performance
+        # if cv_avg_r2 < 0.2:
+        #     st.write("\n### ⚠️ Important note:")
+        #     st.write(f"With a cross-validated R² of {cv_avg_r2:.4f}, current predictions are **not reliable**. It is recommended to use these predictions with extreme caution.")
         
 
 
@@ -1178,7 +1174,7 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
             "mae_relative": mae_relative,
             "cv_results": {
                 "r2_scores": cv_r2_scores,
-                "rmse_scores": cv_rmse_scores,
+                #"rmse_scores": cv_rmse_scores,
                 "mae_scores": cv_mae_scores
             }
         }
@@ -1215,10 +1211,7 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
         st.warning(f"Period format'{prediction_timeframe}' not recognized.")
         return None, None, None, None
     
-    # Afficher les valeurs moyennes par période pour analyse
-    agg_data = df.groupby(period_column)['Conso'].mean().reset_index()
-    #st.write("Consommation moyenne par période:")
-    st.table(agg_data)
+    
     
     # Déterminer la période actuelle et la période suivante
     current_year = selected_year
@@ -1267,16 +1260,11 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
         next_period_year = next_period
         current_period_name = str(current_period)
         next_period_name = str(next_period)
-    
-    # st.write(f"Période actuelle: {current_period_name} {current_year}")
-    # st.write(f"Période à prédire: {next_period_name} {next_period_year}")
-    
-    # NOUVELLE APPROCHE: Sélection très ciblée des données d'entraînement
-    # Pour chaque type de période, utiliser uniquement les périodes les plus récentes
+   
     
     if time_unit == 'month':
         # Pour les mois, utiliser seulement les 12 derniers mois
-        #st.write("### Approche d'entraînement: 12 derniers mois seulement")
+       
         
         # Créer une liste de tuples (year, mois) pour toutes les données
         date_tuples = [(row['annee_debut'], row['mois_debut']) for _, row in df.iterrows()]
@@ -1295,7 +1283,7 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
     
     elif time_unit == 'quarter':
         # Pour les trimestres, utiliser seulement les 4 derniers trimestres
-        #st.write("### Approche d'entraînement: 4 derniers trimestres seulement")
+       
         
         # Créer une liste de tuples (year, trimestre) pour toutes les données
         date_tuples = [(row['annee_debut'], row['trimestre_debut']) for _, row in df.iterrows()]
@@ -1314,7 +1302,7 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
         
     elif time_unit == 'semester':
         # Pour les semestres, utiliser seulement les 2 derniers semestres
-        #st.write("### Approche d'entraînement: 2 derniers semestres seulement")
+      
         
         # Créer une liste de tuples (year, semestre) pour toutes les données
         date_tuples = [(row['annee_debut'], row['semestre_debut']) for _, row in df.iterrows()]
@@ -1333,7 +1321,7 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
     
     else:  # year
         # Pour les years, utiliser toutes les years précédentes
-        #st.write("### Approche d'entraînement: Toutes les years disponibles")
+      
         
         # Obtenir toutes les years disponibles
         all_years = sorted(df['annee_debut'].unique())
@@ -1387,36 +1375,15 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
     #Ajouter ce code
     if st.checkbox("View in-depth model diagnostics.", False, key="diagnostic_ridgee"):
         run_model_diagnostics_ridge(df_train,alpha=1.0,cv_folds=5)
-
-
-    # Afficher les coefficients du modèle
-    # st.write(f"Coefficient: {model.coef_[0]:.4f}")
-    # st.write(f"Intercept: {model.intercept_:.4f}")
-    # st.write(f"Équation: Consommation = {model.coef_[0]:.4f} × Période + {model.intercept_:.4f}")
     
     # Faire des prédictions pour la période actuelle (pour validation)
     y_pred_train = model.predict(X_train)
     
-    # # Évaluer le modèle avec les métriques détaillées
-    # metrics = evaluate_model(y_train, y_pred_train)
-    
-    # # Afficher les métriques d'évaluation
-    #st.write("📊 Performance sur les données d'entraînement")
-    # display_metrics(metrics)
-    
+  
     # Calculer l'erreur moyenne sur les données d'entraînement
     mean_error = np.mean(np.abs(y_train - y_pred_train))
     mean_error_pct = (mean_error / np.mean(y_train)) * 100 if np.mean(y_train) > 0 else 0
     
-    #st.write(f"Erreur moyenne sur données d'entraînement: {mean_error:.2f} ({mean_error_pct:.2f}%)")
-    
-    # Ajouter l'analyse des résidus
-    # st.write("## 📈 Analyse des résidus du modèle")
-    # try:
-    #     # Utiliser la fonction plot_residuals pour afficher les graphiques des résidus
-    #     plot_residuals(y_train, y_pred_train, title=f"Analyse des résidus pour la prédiction par {time_unit}")
-    # except Exception as e:
-    #     st.warning(f"Impossible d'afficher l'analyse des résidus: {str(e)}")
     
     # Faire une prédiction pour la période suivante
     X_forecast = np.array([[next_period]])
@@ -1483,17 +1450,7 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
             delta=f"{delta:.2f}"
         )
     
-    # # Créer un tableau pour comparer les valeurs
-    # comparison_df = pd.DataFrame({
-    #     'Périod': [f"{current_period_name} ({current_year})", f"{next_period_name} ({next_period_year})"],
-    #     'Consumption': [current_conso, next_period_prediction],
-    #     'Variation (%)': [0, display_variation]
-    # })
     
-    # st.table(comparison_df.style.format({
-    #     'Consumption': '{:.2f}',
-    #     'Variation (%)': '{:.2f}'
-    # }))
     
     # Créer un graphique à barres (bar chart)
     fig = go.Figure()
@@ -1607,85 +1564,7 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
 
 
 
-    #     # Code de débogage pour vérifier le seuil et la comparaison
-    # if 'MontFact' in df_train.columns and selected_user != "All users" and next_period_billing is not None:
-    #     st.write("### Verification de seuil de facturation")
-        
-    #     # Vérification explicite de la récupération du seuil
-    #     user_threshold = get_user_billing_threshold(selected_user)
-    #     # Débogage supplémentaire pour comprendre pourquoi le seuil n'est pas récupéré
-    #     st.write("### Debug pour les seuils de facturation")
-    #     st.write(f"Utilisateur sélectionné: '{selected_user}'")
 
-    #     # Vérifier directement dans la base de données
-    #     try:
-    #         engine = get_connection()
-    #         query = "SELECT * FROM billing_thresholds"
-    #         thresholds_df = pd.read_sql(query, engine)
-    #         st.write("Tous les seuils configurés dans la base de données:")
-    #         st.write(thresholds_df)
-            
-    #         # Vérifier spécifiquement pour cet utilisateur
-    #         user_query = f"SELECT * FROM billing_thresholds WHERE identifier = '{selected_user}'"
-    #         user_threshold_df = pd.read_sql(user_query, engine)
-    #         st.write(f"Seuil pour '{selected_user}':")
-    #         st.write(user_threshold_df)
-            
-    #         if user_threshold_df.empty:
-    #             st.error(f"Aucun seuil trouvé pour l'identifiant '{selected_user}'")
-    #         else:
-    #             st.success(f"Seuil trouvé: {user_threshold_df['threshold_value'].iloc[0]}")
-                
-    #     except Exception as e:
-    #         st.error(f"Erreur lors de la vérification directe des seuils: {e}")
-    #     st.write(f"Seuil récupéré de la base de données: {user_threshold}")
-        
-    #     if user_threshold is not None:
-    #         # Afficher les valeurs et leur type
-    #         st.write(f"Type de next_period_billing: {type(next_period_billing)}")
-    #         st.write(f"Type de user_threshold: {type(user_threshold)}")
-            
-    #         # Conversion explicite en float si nécessaire
-    #         next_period_billing_float = float(next_period_billing)
-    #         user_threshold_float = float(user_threshold)
-            
-    #         # Comparaison avec affichage des valeurs
-    #         st.write(f"Montant prédit: {next_period_billing_float}")
-    #         st.write(f"Seuil configuré: {user_threshold_float}")
-    #         is_threshold_exceeded = next_period_billing_float >= user_threshold_float
-    #         st.write(f"Le seuil est-il dépassé? {is_threshold_exceeded}")
-            
-    #         if is_threshold_exceeded:
-    #             st.warning("⚠️ Le seuil est dépassé! Une alerte devrait être créée.")
-                
-    #             # Création manuelle de l'alerte pour tester
-    #             alert_created = create_alert(
-    #                 selected_user, 
-    #                 'billing_threshold', 
-    #                 f"Test direct: Predicted billing of {next_period_billing_float:.2f} FCFA exceeds threshold of {user_threshold_float:.2f} FCFA."
-    #             )
-    #             st.write(f"Alerte créée manuellement: {alert_created}")
-                
-    #             # Tester l'envoi d'email directement ici
-    #             user_email = get_user_email(selected_user)
-    #             if user_email:
-    #                 email_subject = "Test Direct de Dépassement de Seuil"
-    #                 email_message = f"""
-    #                 <html>
-    #                 <body>
-    #                 <h2>🚨 Test Direct: Seuil de Facturation Dépassé</h2>
-    #                 <p>Le montant prédit ({next_period_billing_float:.2f} FCFA) dépasse votre seuil configuré ({user_threshold_float:.2f} FCFA).</p>
-    #                 </body>
-    #                 </html>
-    #                 """
-    #                 email_sent = send_billing_alert_email(user_email, email_subject, email_message)
-    #                 st.write(f"Email envoyé: {email_sent}")
-    #         else:
-    #             st.success("✅ Le seuil n'est pas dépassé.")
-    #     else:
-    #         st.warning("⚠️ Aucun seuil n'est défini pour cet utilisateur.")
-
-    # Vérifier si les données de facturation sont disponibles
     # Vérifier si les données de facturation sont disponibles
     has_billing_data = 'MontFact' in df_train.columns
 
@@ -1746,22 +1625,23 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
                     # Envoyer l'email
                     email_sent = send_billing_alert_email(user_email, email_subject, email_message)
                     if email_sent:
-                        #st.info(f"📧 An alert email has been sent to {user_email}")
+                        st.info(f"📧 An alert email has been sent to {user_email}")
                         alert_sent = True
+                    else:st.error(f"❌ Failed to send alert email to {user_email}")
                 else:
-                    st.warning("⚠️ No email configured for this user. Alert created but email not sent.")
+                    st.warning("⚠️ No email configured for this user. There is an alert but email is not sent.")
             else:
                 st.success(f"✅ Your current billing is below your threshold ({(current_billing / user_threshold * 100):.1f}% of threshold)")
         else:
             # Cas où aucun seuil n'est défini: vérifier l'augmentation significative
             st.info("No threshold is defined.")
             
-            if next_period_billing >= current_billing:
+            if next_period_billing > current_billing:
                 # Calcule le pourcentage d'augmentation
                 percent_increase = ((next_period_billing - current_billing) / current_billing * 100) if current_billing > 0 else 0
                 
                 # Alerte seulement si l'augmentation est supérieure à 10%
-                if percent_increase >= 0:
+                if percent_increase > 0:
                     st.warning(f"⚠️ you're bound to go over your consumption this {current_period_name}.")
                     
                     # Créer une alerte en base de données
@@ -1769,6 +1649,7 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
                         selected_user,
                         'billing_increase',
                         f"Predicted billing of {next_period_billing:.2f} FCFA for {next_period_name} {next_period_year} is {percent_increase:.1f}% higher than your current billing of {current_billing:.2f} FCFA."
+                        
                     )
                     
                     # Envoi automatique de l'email
@@ -1791,14 +1672,40 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
                         </body>
                         </html>
                         """
-                        
-                        # Envoyer l'email
-                        email_sent = send_billing_alert_email(user_email, email_subject, email_message)
-                        if email_sent:
-                            #st.info(f"📧 An alert email has been sent to {user_email}")
-                            alert_sent = True
+                        # Debug print to check email parameters
+                        print(f"Attempting to send billing increase email to: {user_email}")
+                        print(f"Subject: {email_subject}")
+                         # Envoyer l'email avec gestion d'erreurs
+                        try:
+                            email_sent = send_billing_alert_email(user_email, email_subject, email_message)
+                            if email_sent:
+                                st.info(f"📧 An alert email has been sent to {user_email}")
+                                alert_sent = True
+                            else:
+                                st.error(f"❌ Failed to send billing increase alert email to {user_email}")
+                                
+                                # Ajouter un test direct pour déboguer
+                                st.warning("Testing email functionality...")
+                                test_subject = "Test Email"
+                                test_message = """
+                                <html>
+                                <body>
+                                <h2>Test Email</h2>
+                                <p>This is a test email to verify the email sending functionality.</p>
+                                </body>
+                                </html>
+                                """
+                                test_sent = send_billing_alert_email(user_email, test_subject, test_message)
+                                if test_sent:
+                                    st.success("Test email sent successfully! The issue might be with the content.")
+                                else:
+                                    st.error("Test email failed as well. The issue is with the email sending function.")
+                        except Exception as e:
+                            st.error(f"❌ Error sending email: {str(e)}")
+                            print(f"Exception sending increase email: {str(e)}")
+                            
                     else:
-                        st.warning("⚠️ No email configured for this user. Alert created but email not sent.")
+                        st.warning("⚠️ No email configured for this user. There is an alert  but email is not sent.")
                 else:
                     st.success(f"✅ No significant increase detected. Predicted billing is only {percent_increase:.1f}% higher than current billing.")
             else:
@@ -1847,18 +1754,18 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
         st.write(f"↘️ The prediction shows a **slight decrease** of {abs(variation_pct):.1f}% pour {time_unit} {next_period_name} compared to the current data.")
     
     # Fiabilité de la prédiction
-    st.write("#### Prediction Reliability")
+    # st.write("#### Prediction Reliability")
     
-    if len(df_train) < 10:
-        st.write("⚠️ Prediction based on **limited data** (<10 points). Results should be interpreted with caution.")
-    elif abs(variation_pct) > 30:
-        st.write("⚠️ The **significant variation** suggests that the prediction should be interpreted with caution.")
-    else:
-        st.write("✅ The prediction seems reasonable given the available data.")
+    # if len(df_train) < 10:
+    #     st.write("⚠️ Prediction based on **limited data** (<10 points). Results should be interpreted with caution.")
+    # elif abs(variation_pct) > 30:
+    #     st.write("⚠️ The **significant variation** suggests that the prediction should be interpreted with caution.")
+    # else:
+    #     st.write("✅ The prediction seems reasonable given the available data.")
     
     return model, current_period, next_period, next_period_prediction
 def predict_by_city(df, prediction_timeframe, selected_year):
-    #st.write(f"## 📈 Prédiction de consommation par ville pour {prediction_timeframe}")
+    
     
     # Déterminer la période en fonction du type de prédiction
     if "month" in prediction_timeframe.lower():
@@ -1957,10 +1864,9 @@ def predict_by_city(df, prediction_timeframe, selected_year):
     
     # AMÉLIORATION: Utiliser une approche similaire à celle de predict_by_period avec une sélection ciblée des données
     # Filtrer les données pour obtenir des données plus récentes pour un modèle plus pertinent
-    #st.write("### Sélection des données d'entraînement")
+    
     if time_unit == 'month':
-        # Pour les mois, utiliser les 12 derniers mois pour chaque ville
-        #st.write("Approche d'entraînement: 12 derniers mois de données par ville")
+        
         
         # Créer une liste de tuples (year, mois) pour toutes les données
         date_tuples = [(row['annee_debut'], row['mois_debut']) for _, row in df.iterrows()]
@@ -1979,7 +1885,7 @@ def predict_by_city(df, prediction_timeframe, selected_year):
     
     elif time_unit == 'quarter':
         # Pour les trimestres, utiliser les 4 derniers trimestres
-        #st.write("Approche d'entraînement: 4 derniers trimestres de données par ville")
+       
         
         date_tuples = [(row['annee_debut'], row['trimestre_debut']) for _, row in df.iterrows()]
         unique_date_tuples = list(set(date_tuples))
@@ -1989,12 +1895,10 @@ def predict_by_city(df, prediction_timeframe, selected_year):
         
         df_train = df[df.apply(lambda row: (row['annee_debut'], row['trimestre_debut']) in recent_tuples, axis=1)].copy()
         
-        #st.write(f"Utilisation de {len(df_train)} enregistrements sur {len(df)} (des {len(recent_tuples)} derniers trimestres)")
-    
+        
     elif time_unit == 'semester':
         # Pour les semestres, utiliser les 2 derniers semestres
-        #st.write("Approche d'entraînement: 2 derniers semestres de données par ville")
-        
+       
         date_tuples = [(row['annee_debut'], row['semestre_debut']) for _, row in df.iterrows()]
         unique_date_tuples = list(set(date_tuples))
         
@@ -2003,7 +1907,7 @@ def predict_by_city(df, prediction_timeframe, selected_year):
         
         df_train = df[df.apply(lambda row: (row['annee_debut'], row['semestre_debut']) in recent_tuples, axis=1)].copy()
         
-        #st.write(f"Utilisation de {len(df_train)} enregistrements sur {len(df)} (des {len(recent_tuples)} derniers semestres)")
+       
     
     else:  # year
         # Pour les years, utiliser toutes les years disponibles
@@ -2014,8 +1918,7 @@ def predict_by_city(df, prediction_timeframe, selected_year):
         
         df_train = df[df['annee_debut'].isin(previous_years)].copy()
         
-        #st.write(f"Utilisation de {len(df_train)} enregistrements sur {len(df)} (de toutes les {len(previous_years)} years jusqu'à {current_year})")
-    
+       
     # Filtrer les données pour la période actuelle pour afficher les comparaisons
     df_current = df_train[(df_train[period_column] == current_period)]
     
@@ -2036,7 +1939,7 @@ def predict_by_city(df, prediction_timeframe, selected_year):
     df_train = df_train.reset_index(drop=True)
     
     # AMÉLIORATION: Prétraitement des données pour gérer les valeurs extrêmes
-    #st.write("### Prétraitement des données")
+    
     
     # Détection et traitement des valeurs aberrantes (capping)
     Q1 = df_train['Conso'].quantile(0.25)
@@ -2106,26 +2009,15 @@ def predict_by_city(df, prediction_timeframe, selected_year):
         # Faire des prédictions pour les données d'entraînement (pour évaluer le modèle)
         y_pred = model.predict(X)
         
-        # Évaluer le modèle
-        #metrics = evaluate_model(y, y_pred)
         
-        # # Ajouter l'analyse des coefficients du modèle
-        # st.write("### Coefficients du modèle")
-        # coef_df = pd.DataFrame({
-        #     'Feature': X.columns,
-        #     'Coefficient': model.coef_
-        # })
-        # coef_df = coef_df.sort_values('Coefficient', ascending=False)
-        # st.write("Top 5 caractéristiques les plus influentes:")
-        # st.table(coef_df.head(5))
         
     except Exception as e:
         st.warning(f"⚠️ Erreur lors de l'entraînement du modèle: {str(e)}")
         st.info("Model training error:")
         #Approche simplifiée en cas d'erreur
         metrics = {
-             'MSE': np.nan,
-             'RMSE': np.nan,
+            #  'MSE': np.nan,
+            #  'RMSE': np.nan,
              'MAE': np.nan,
              'R²': np.nan,
              'MAPE (%)': np.nan
@@ -2133,63 +2025,6 @@ def predict_by_city(df, prediction_timeframe, selected_year):
         # Continuer avec un modèle simpliste
         model = None
     
-    # Afficher les métriques si un modèle a été créé
-    # if model is not None:
-    #     st.write(f"## 📊 Performance sur les données d'entraînement")
-    #     display_metrics(metrics)
-        
-    #     # Ajouter l'analyse des résidus
-    #     st.write("## 📈 Analyse des résidus du modèle")
-        
-    #     try:
-    #         # Utiliser la fonction plot_residuals pour afficher les graphiques des résidus
-    #         plot_residuals(y, y_pred, title=f"Analyse des résidus pour la prédiction par ville")
-            
-    #         # AMÉLIORATION: Ajouter un graphique de comparaison valeurs réelles vs prédites
-    #         st.write("### Comparaison entre valeurs réelles et prédites")
-    #         comparison_data = pd.DataFrame({
-    #             'Réel': y,
-    #             'Prédit': y_pred,
-    #             'Erreur': y - y_pred,
-    #             'Erreur (%)': (y - y_pred) / y * 100 if np.any(y != 0) else np.zeros_like(y),
-    #             'Ville': df_train_capped['Ville'].values,
-    #             'Période': df_train_capped[period_column].values
-    #         })
-            
-    #         fig = go.Figure()
-    #         fig.add_trace(go.Scatter(
-    #             x=comparison_data['Réel'],
-    #             y=comparison_data['Prédit'],
-    #             mode='markers',
-    #             marker=dict(color='blue'),
-    #             name='Consommation'
-    #         ))
-            
-    #         # Ajouter une ligne de référence parfaite (y=x)
-    #         min_val = min(comparison_data['Réel'].min(), comparison_data['Prédit'].min())
-    #         max_val = max(comparison_data['Réel'].max(), comparison_data['Prédit'].max())
-    #         fig.add_trace(go.Scatter(
-    #             x=[min_val, max_val],
-    #             y=[min_val, max_val],
-    #             mode='lines',
-    #             line=dict(color='red', dash='dash'),
-    #             name='Prédiction parfaite'
-    #         ))
-            
-    #         fig.update_layout(
-    #             title='Valeurs réelles vs Prédites',
-    #             xaxis_title='Consommation réelle',
-    #             yaxis_title='Consommation prédite',
-    #             height=500
-    #         )
-            
-    #         st.plotly_chart(fig)
-            
-    #     except Exception as e:
-    #         st.warning(f"Impossible d'afficher les analyses supplémentaires: {str(e)}")
-    
-    # Prédiction pour chaque ville pour la période suivante
-    #st.write(f"## 🏙️ Prédiction de consommation par ville pour {time_unit} {next_period_name}")
     
     # Obtenir la liste des villes uniques
     cities = df_train_capped['Ville'].unique()
@@ -2399,23 +2234,7 @@ def predict_by_city(df, prediction_timeframe, selected_year):
     st.write("4. **Optimizing distribution** based on geographic variations in demand")
     st.write("5. **Establishing specific monitoring** for cities with atypical variations")
     
-    # AMÉLIORATION: Ajouter une section sur la fiabilité des prédictions
-    #st.write("#### Fiabilité des prédictions")
-    
-    # Évaluer la fiabilité en fonction de plusieurs facteurs
-    # if model is not None and 'R²' in metrics:
-    #     r2 = metrics['R²']
-    #     if r2 > 0.7:
-    #         st.write("✅ **Fiabilité élevée** : Le modèle explique bien les variations dans les données (R² > 0.7)")
-    #     elif r2 > 0.5:
-    #         st.write("🟢 **Fiabilité modérée** : Le modèle capture une partie significative des variations (R² > 0.5)")
-    #     elif r2 > 0.2:
-    #         st.write("🟡 **Fiabilité limitée** : Le modèle ne capture qu'une partie modeste des variations (R² > 0.2)")
-    #     else:
-    #         st.write("🔴 **Fiabilité faible** : Le modèle explique peu les variations dans les données (R² < 0.2)")
-    #         st.write("⚠️ Il est recommandé d'utiliser ces prédictions avec prudence et de les compléter avec d'autres méthodes d'analyse.")
-    # else:
-    #     st.write("⚠️ **Fiabilité indéterminée** : Impossible d'évaluer précisément la fiabilité du modèle")
+ 
 
     # Fiabilité de la prédiction
     st.write("#### Prediction Reliability")
@@ -2535,12 +2354,12 @@ def predict_by_client_type(df, prediction_timeframe, selected_year):
         current_period_name = str(current_period)
         next_period_name = str(next_period)
     
-    # AMÉLIORATION: Utiliser une approche similaire à celle de predict_by_period avec une sélection ciblée des données
+    
     # Filtrer les données pour obtenir des données plus récentes pour un modèle plus pertinent
     #st.write("### Sélection des données d'entraînement")
     if time_unit == 'month':
         # Pour les mois, utiliser les 12 derniers mois pour chaque type de client
-        #st.write("Approche d'entraînement: 12 derniers mois de données par type de client")
+        
         
         # Créer une liste de tuples (year, mois) pour toutes les données
         date_tuples = [(row['annee_debut'], row['mois_debut']) for _, row in df.iterrows()]
@@ -2559,7 +2378,7 @@ def predict_by_client_type(df, prediction_timeframe, selected_year):
     
     elif time_unit == 'quarter':
         # Pour les trimestres, utiliser les 4 derniers trimestres
-        #st.write("Approche d'entraînement: 4 derniers trimestres de données par type de client")
+       
         
         date_tuples = [(row['annee_debut'], row['trimestre_debut']) for _, row in df.iterrows()]
         unique_date_tuples = list(set(date_tuples))
@@ -2573,7 +2392,7 @@ def predict_by_client_type(df, prediction_timeframe, selected_year):
     
     elif time_unit == 'semester':
         # Pour les semestres, utiliser les 2 derniers semestres
-        #st.write("Approche d'entraînement: 2 derniers semestres de données par type de client")
+        
         
         date_tuples = [(row['annee_debut'], row['semestre_debut']) for _, row in df.iterrows()]
         unique_date_tuples = list(set(date_tuples))
@@ -2583,18 +2402,17 @@ def predict_by_client_type(df, prediction_timeframe, selected_year):
         
         df_train = df[df.apply(lambda row: (row['annee_debut'], row['semestre_debut']) in recent_tuples, axis=1)].copy()
         
-        #st.write(f"Utilisation de {len(df_train)} enregistrements sur {len(df)} (des {len(recent_tuples)} derniers semestres)")
+        
     
     else:  # year
         # Pour les years, utiliser toutes les years disponibles
-        #st.write("Approche d'entraînement: Données de toutes les years disponibles")
         
         all_years = sorted(df['annee_debut'].unique())
         previous_years = [year for year in all_years if year <= current_year]
         
         df_train = df[df['annee_debut'].isin(previous_years)].copy()
         
-        #st.write(f"Utilisation de {len(df_train)} enregistrements sur {len(df)} (de toutes les {len(previous_years)} years jusqu'à {current_year})")
+        
     
     # Filtrer les données pour la période actuelle pour afficher les comparaisons
     df_current = df_train[(df_train[period_column] == current_period)]
@@ -2616,7 +2434,7 @@ def predict_by_client_type(df, prediction_timeframe, selected_year):
     df_train = df_train.reset_index(drop=True)
     
     # AMÉLIORATION: Prétraitement des données pour gérer les valeurs extrêmes
-    #st.write("### Prétraitement des données")
+    
     
     # Détection et traitement des valeurs aberrantes (capping)
     Q1 = df_train['Conso'].quantile(0.25)
@@ -2627,8 +2445,7 @@ def predict_by_client_type(df, prediction_timeframe, selected_year):
     upper_bound = Q3 + 1.5 * IQR
     
     # Afficher les seuils
-    #st.write(f"Seuil inférieur de capping: {lower_bound:.2f}")
-    #st.write(f"Seuil supérieur de capping: {upper_bound:.2f}")
+    
     
     # Nombre de valeurs aberrantes avant capping
     outliers_count = len(df_train[(df_train['Conso'] < lower_bound) | (df_train['Conso'] > upper_bound)])
@@ -2696,16 +2513,15 @@ def predict_by_client_type(df, prediction_timeframe, selected_year):
             'Coefficient': model.coef_
         })
         coef_df = coef_df.sort_values('Coefficient', ascending=False)
-        #st.write("Top caractéristiques les plus influentes:")
-        #st.table(coef_df.head(min(5, len(coef_df))))
+        
         
     except Exception as e:
         st.warning(f"⚠️ Error ding model training: {str(e)}")
         st.info("Using of a simplified approach")
         # Approche simplifiée en cas d'erreur
         metrics = {
-            'MSE': np.nan,
-            'RMSE': np.nan,
+            # 'MSE': np.nan,
+            # 'RMSE': np.nan,
             'MAE': np.nan,
             'R²': np.nan,
             'MAPE (%)': np.nan
@@ -2713,63 +2529,10 @@ def predict_by_client_type(df, prediction_timeframe, selected_year):
         # Continuer avec un modèle simpliste
         model = None
     
-    # # Afficher les métriques si un modèle a été créé
-    # if model is not None:
-    #     st.write(f"## 📊 Performance sur les données d'entraînement")
-    #     display_metrics(metrics)
-        
-    #     # Ajouter l'analyse des résidus
-    #     st.write("## 📈 Analyse des résidus du modèle")
-        
-    #     try:
-    #         # Utiliser la fonction plot_residuals pour afficher les graphiques des résidus
-    #         plot_residuals(y, y_pred, title=f"Analyse des résidus pour la prédiction par type de client")
-            
-    #         # AMÉLIORATION: Ajouter un graphique de comparaison valeurs réelles vs prédites
-    #         st.write("### Comparaison entre valeurs réelles et prédites")
-    #         comparison_data = pd.DataFrame({
-    #             'Réel': y,
-    #             'Prédit': y_pred,
-    #             'Erreur': y - y_pred,
-    #             'Erreur (%)': (y - y_pred) / y * 100 if np.any(y != 0) else np.zeros_like(y),
-    #             'TypeClient': df_train_capped['TypeClient'].values,
-    #             'Période': df_train_capped[period_column].values
-    #         })
-            
-    #         fig = go.Figure()
-    #         fig.add_trace(go.Scatter(
-    #             x=comparison_data['Réel'],
-    #             y=comparison_data['Prédit'],
-    #             mode='markers',
-    #             marker=dict(color='blue'),
-    #             name='Consommation'
-    #         ))
-            
-    #         # Ajouter une ligne de référence parfaite (y=x)
-    #         min_val = min(comparison_data['Réel'].min(), comparison_data['Prédit'].min())
-    #         max_val = max(comparison_data['Réel'].max(), comparison_data['Prédit'].max())
-    #         fig.add_trace(go.Scatter(
-    #             x=[min_val, max_val],
-    #             y=[min_val, max_val],
-    #             mode='lines',
-    #             line=dict(color='red', dash='dash'),
-    #             name='Prédiction parfaite'
-    #         ))
-            
-    #         fig.update_layout(
-    #             title='Valeurs réelles vs Prédites',
-    #             xaxis_title='Consommation réelle',
-    #             yaxis_title='Consommation prédite',
-    #             height=500
-    #         )
-            
-    #         st.plotly_chart(fig)
-            
-    #     except Exception as e:
-    #         st.warning(f"Impossible d'afficher les analyses supplémentaires: {str(e)}")
+    
     
     # Prédiction pour chaque type de client pour la période suivante
-    #st.write(f"## 👥 Prédiction de consommation par type de client pour {time_unit} {next_period_name} ({next_period_year})")
+    
     
     # Obtenir la liste des types de client uniques
     client_types = df_train_capped['TypeClient'].unique()
@@ -3004,57 +2767,14 @@ def predict_by_client_type(df, prediction_timeframe, selected_year):
     st.write("- Regularity of temporal data: " + ("✅ Regular" if len(df_train) > len(client_types) * 3 else "⚠️ Irregular"))
     st.write("- Presence of extreme values: " + ("⚠️ Significant" if outliers_count/len(df_train)*100 > 10 else "✅ Moderate"))
 
-    # # AMÉLIORATION: Visualisation de la distribution des prédictions
-    # st.write("#### Distribution des prédictions")
-    
-    # try:
-    #     # Créer des histogrammes pour comparer les distributions actuelles et prédites
-    #     hist_data = [
-    #         client_type_pred_df[f'Consommation {current_period_name} ({current_year})'],
-    #         client_type_pred_df[f'Prédiction {next_period_name} ({next_period_year})']
-    #     ]
-        
-    #     fig = go.Figure()
-    #     fig.add_trace(go.Histogram(
-    #         x=hist_data[0],
-    #         name=f'Consommation {current_period_name}',
-    #         opacity=0.7,
-    #         marker=dict(color='blue')
-    #     ))
-        
-    #     fig.add_trace(go.Histogram(
-    #         x=hist_data[1],
-    #         name=f'Prédiction {next_period_name}',
-    #         opacity=0.7,
-    #         marker=dict(color='red')
-    #     ))
-        
-    #     fig.update_layout(
-    #         title="Distribution des consommations actuelles vs prédites",
-    #         xaxis_title='Consommation',
-    #         yaxis_title='Fréquence',
-    #         barmode='overlay',
-    #         height=400
-    #     )
-        
-    #     st.plotly_chart(fig)
-        
-    # except Exception as e:
-    #     st.warning(f"Impossible d'afficher la distribution des prédictions: {str(e)}")
 
     return model, client_types, client_type_pred_df
-# Mettre à jour la fonction dashboard pour inclure les nouvelles prédictions
-# Dans la fonction prediction_dashboard, modifiez la logique des onglets :
+
 def prediction_dashboard(df_filtered, selected_user, selected_year, prediction_timeframe, is_synthetic=False, is_admin=False, user_role=None, assigned_city=None):
     """
     Cette fonction intègre les modèles de prédiction dans l'interface principale,
     prenant en compte les modifications apportées aux fonctions de prédiction.
     """
-    # Titre de la section
-    st.write("jfj")
-    # Afficher l'information sur l'utilisateur et l'year sélectionnée
-    if selected_user != "All users":
-        st.write(f"**👤 User:** {selected_user}")
     
     # Afficher l'year sélectionnée
     st.write(f"**📅 Reference year:** {selected_year}")
@@ -3062,32 +2782,6 @@ def prediction_dashboard(df_filtered, selected_user, selected_year, prediction_t
     if is_synthetic:
         st.info("⚠️ Using synthetic data for predictions. Results are for demonstration only.")
     
-    # # PLACEZ LE CODE DE FILTRAGE ICI
-    # # Filter data if the user is an agent
-    # # Filter data if the user is an agent
-    # if user_role == "Agent" and assigned_city:
-    #     st.write(f"Agent assigned to city: {assigned_city}")
-        
-    #     # Debug: show available cities before filtering
-    #     available_cities = df_filtered['Ville'].unique()
-    #     st.write(f"Available cities in data: {available_cities}")
-        
-    #     # Try a more flexible approach - use partial matching
-    #     try:
-    #         # Create a mask for cities that might match
-    #         mask = df_filtered['Ville'].str.lower().str.contains(assigned_city.lower()) 
-            
-    #         # If no matches found with contains, try more flexible matching
-    #         if not mask.any():
-    #             st.warning(f"No cities match '{assigned_city}'. Using all data.")
-    #         else:
-    #             # Apply the filter
-    #             df_filtered = df_filtered[mask]
-    #             matching_cities = df_filtered['Ville'].unique()
-    #             st.success(f"Showing data for cities: {matching_cities}")
-    #     except Exception as e:
-    #         st.error(f"Error during city filtering: {str(e)}")
-    #         st.info("Using all available data.")
     
     # Vérifier si nous avons des données disponibles
     if df_filtered.empty:

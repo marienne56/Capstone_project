@@ -11,11 +11,7 @@ from dbConnection import get_connection  # Import the connection function
 from display_user_list import display_users_list
 from update_account import fetch_user_details
 from permission_system import check_admin_permission, get_user_role
-# st.set_page_config(
-#     page_title="SODECI Consumption Analysis",
-#     page_icon="💧",
-#     layout="wide"
-# )
+
 from sqlalchemy.sql import text
 
 if "identifier" not in st.session_state:
@@ -64,10 +60,7 @@ def dashboard():
     user_details = fetch_user_details(identifier)
     if user_details is not None and isinstance(user_details, pd.Series):
         client_name = user_details["ClientName"]
-        # if is_admin:
-        #     st.sidebar.header(f"Welcome, Admin :violet[{client_name}]!")
-        # else:
-        #     st.sidebar.header(f"Welcome, :violet[{client_name}]!")
+       
 
         # Utility functions
         def get_quarter(date):
@@ -281,7 +274,7 @@ def dashboard():
                 if df.empty:
                     st.warning(f"⚠️ No data found for identifier {selected_identifier}.")
                     return
-                st.info(f"ℹ️ Displaying data for user with identifier: {selected_identifier}")
+                #st.info(f"ℹ️ Displaying data for user with identifier: {selected_identifier}")
         else:
             # Pour les utilisateurs non-admin et non-agent, l'identifiant est toujours le leur
             selected_identifier = identifier
@@ -397,7 +390,7 @@ def dashboard():
         
         # Check if we have data after filtering
         if df_filtered.empty:
-            st.warning("⚠️ No data matches the selected filters.")
+            st.warning("⚠️ No data matches the selected filterss.")
             return
         
         # Display information about applied filters

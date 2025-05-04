@@ -8,8 +8,6 @@ from forgot_pw import password_change
 from streamlit.runtime.scriptrunner import RerunException
 from streamlit.runtime.scriptrunner import StopException
 # Page par défaut
-#if "page" not in st.session_state or st.session_state.page not in ["sign_up", "login", "home", "sign_upp", "display", "update", "forgot_password"]:
-    #st.session_state.page = "login"  # Réinitialise à "login" si l'état est incohérent
 
 if "page" not in st.session_state:
         st.session_state.page = "login" 
@@ -33,17 +31,23 @@ def login_page():
     # Remove redundant session state initialization since it's already handled above
     if "page" not in st.session_state or st.session_state.page not in ["sign_up", "login", "home", "sign_upp", "display", "update", "forgot_password"]:
         st.session_state.page = "login"
+    
+    # Créer deux colonnes
+    col1, col2 = st.columns([3, 1])  # Ajuste les proportions si nécessaire
 
-    st.title("Let's :violet[Login]")
+    # Ajouter le titre dans la première colonne
+    with col1:
+        st.title("Hello! Let's :violet[Login]")
+
+    # Ajouter l'image dans la deuxième colonne
+    with col2:
+        st.image("images/image.png", width=60)
 
     # Formulaire de connexion
     with st.form("login_form", clear_on_submit=True):
         identifier = st.text_input("Identifier (or Email or Username)").strip()
         password = st.text_input("Password", type="password")
-        #if st.markdown('<a href="#" id="forgot_pw">You forgot your password?</a>', unsafe_allow_html=True):
-            #st.session_state.page = "forgot_password"
-            #st.rerun()
-        
+       
 
         submit_button = st.form_submit_button("Loginn")
 
@@ -66,28 +70,23 @@ def login_page():
                 
                 result = conn.execute(check_query, {
                     "identifier": identifier,
-                    "password_hash": hash_password(password)  # Vérifier le hash du mot de passe
+                    "password_hash": hash_password(password) 
                 }).fetchone()
 
-                #st.write(f"DEBUG - Résultat SQL: {result}")  # Vérifier ce que renvoie la base de données
-
                 if result:
-                    st.session_state.client_name = result[3]  # Utilise l'index de 'ClientName'
-                    #st.session_state.identifier = identifier  # Stocke aussi l'identifiant
+                    st.session_state.client_name = result[3] 
+                    
                     st.session_state.identifier = result[2]
                     st.session_state.role_name = result[4]
-                    #st.write(f"DEBUG - client_name stocké dans session_state: {st.session_state.client_name}")
                     
-                    #st.write(f"DEBUG - identifier stocké dans session_state: {st.session_state.identifier}")
                     
                     st.session_state.logged_in = True  # L'utilisateur est connecté
-                    #st.write(f"Role Name: {st.session_state.role_name}")
+                    
                     
 
                     st.info("✅ You can now access your app! Enjoy your experience. 🚀")
 
-                    # st.session_state.page = "home"
-                    #dashboard()
+                    
                     st.rerun()
 
                 else:
@@ -98,14 +97,14 @@ def login_page():
             st.error("Please try again or contact support.")
 
     if not submit_button:
-        # LIEN EN DEHORS DU FORMULAIre
+        
 
         if st.button("Forgot your password?"):
             #st.session_state.page = "forgot_password"
             
             st.session_state.page = "forgot_password"
             st.rerun()
-        # Bouton pour aller vers l'inscription? 123AZEa@dd
+        # Bouton pour aller vers l'inscription?
 
         col1, col2 = st.columns([1, 1])
         with col2:

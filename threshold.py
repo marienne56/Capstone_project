@@ -113,19 +113,27 @@ def send_billing_alert_email(to_email, subject, message):
     try:
         import requests
         import json
+        import socket
         
-        # Vos clés Mailjet
+        # Mailjet credentials
         api_key = "9db4d134407c233f94673231a25ba13b"
         api_secret = "01e7c939ad6d27232be24fa641e48e23"
         
         url = "https://api.mailjet.com/v3.1/send"
         
-        # Préparer les données de l'email
+        # Check internet connectivity before sending
+        try:
+            socket.create_connection(("www.google.com", 80))
+        except (socket.error, socket.timeout):
+            st.error("❌ No internet connection. Please check your network settings.")
+            return False
+        
+        # Prepare email data
         data = {
             'Messages': [
                 {
                     "From": {
-                        "Email": "mariennedosso@gmail.com",  # Doit être une adresse vérifiée dans votre compte Mailjet
+                        "Email": "mariennedosso@gmail.com",  # Must be a verified email in your Mailjet account
                         "Name": "Water Consumption Alert"
                     },
                     "To": [
@@ -140,25 +148,25 @@ def send_billing_alert_email(to_email, subject, message):
             ]
         }
         
-        # Envoyer la requête à l'API Mailjet
+        # Send request to Mailjet API
         response = requests.post(
             url,
             auth=(api_key, api_secret),
             json=data
         )
         
-        # Vérifier la réponse
+        # Check response
         if response.status_code == 200:
-            #st.success(f"📧 Alert email sent to {to_email}")
             return True
         else:
-            st.error(f"Failed to send email. Status code: {response.status_code}, Response: {response.text}")
+            st.error("❌ Failed to send email. Network or server error.")
             return False
             
+    except requests.exceptions.ConnectionError:
+        st.error("❌ Unable to connect to email server. Check your internet connection.")
+        return False
     except Exception as e:
-        st.error(f"Failed to send email: {e}")
-        import traceback
-        st.error(traceback.format_exc())
+        st.error(f"❌ Unexpected error sending email: {e}")
         return False
 def create_alert(user_identifier, alert_type, message, prediction_id=None):
     """Create an alert in the alert table."""
@@ -166,7 +174,7 @@ def create_alert(user_identifier, alert_type, message, prediction_id=None):
         # Get user_id from identifier
         user_id = get_user_id_from_identifier(user_identifier)
         if not user_id:
-            st.error(f"Could not find user_id for identifier: {user_identifier}")
+            #st.error(f"Could not find user_id for identifier: {user_identifier}")
             return False
         
         # Debug messages
@@ -384,57 +392,13 @@ def display_threshold_management(selected_user):
         col1, col2 = st.columns(2)
         with col1:
             submit = st.form_submit_button("Save Threshold")
-        # with col2:
-        #     reset = st.form_submit_button("Reset Threshold")
+       
         
         if submit:
             #result = 
             result =set_billing_threshold(selected_user, new_threshold)
             
             st.success(result)
-            # import time
-            # time.sleep(15) 
-            # Use st.rerun() instead of st.experimental_rerun()
+            
             st.rerun()
         
-        # if reset:
-        #     result = reset_billing_threshold(selected_user)
-        #     st.success(result)
-        #     # Use st.rerun() instead of st.experimental_rerun()
-        #     st.rerun()
-    
-    # Explain threshold system
-    # st.write("### ℹ️ About Billing Thresholds")
-    # st.write("""
-    # Setting a billing threshold allows you to be notified when:
-    
-    # - The predicted billing amount for the next period exceeds your threshold
-    # - The system will send you an email alert if your email is configured
-    
-    # This helps you monitor and manage your water consumption costs proactively.
-    # """)
-    
-    # # Check user email status
-    # user_email = get_user_email(selected_user)
-    # if user_email:
-    #     st.success(f"Email notifications will be sent to: **{user_email}**")
-    # else:
-    #     st.warning("No email configured for notifications. Please contact support to add your email.")
-    
-    # Display recent alerts
-    # st.write("### 📬 Recent Billing Alerts")
-    
-    # alerts_df = get_user_alerts(selected_user)
-    
-    # if not alerts_df.empty:
-    #     # Format the dataframe for display
-    #     alerts_df['Type'] = alerts_df['alert_type'].apply(
-    #         lambda x: "Threshold Exceeded" if x == "billing_threshold" else "Significant Increase"
-    #     )
-    #     alerts_df['Message'] = alerts_df['message']
-    #     alerts_df['Date'] = pd.to_datetime(alerts_df['created_at']).dt.strftime('%Y-%m-%d %H:%M')
-        
-    #     # Display the table
-    #     st.table(alerts_df[['Type', 'Message', 'Date']])
-    # else:
-    #     st.info("No recent billing alerts found.")

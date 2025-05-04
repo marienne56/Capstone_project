@@ -54,14 +54,13 @@ st.markdown("""
 def sign_up_page():
  
     if "page" not in st.session_state:
-        st.session_state.page = "sign_up"  # Page par défaut
+        st.session_state.page = "sign_up" 
 
 
  
-    # Title of the application
+  
     st.title("User Registration Form")
 
-    # Ajout d'une clé pour le message de succès persistant
     if 'registration_success' not in st.session_state:
         st.session_state.registration_success = False
 
@@ -86,7 +85,7 @@ def sign_up_page():
         st.session_state.registration_success = False
 
     # Formulaire avec clear_on_submit=False
-    with st.form("registration_form", clear_on_submit=False):
+    with st.form("registration_form", clear_on_submit=True):
         col1, col2 = st.columns(2)
         
         with col1:
@@ -102,7 +101,7 @@ def sign_up_page():
             password = st.text_input("Password", type="password")
             confirm_password = st.text_input("Confirm Password", type="password")
         
-        # Définir les index pour le selectbox
+        
         role_options = ["Agent", "Admin"]
         role_index = role_options.index(st.session_state.form_data['role_name']) if st.session_state.form_data['role_name'] in role_options else 0
         
@@ -234,11 +233,31 @@ def sign_up_page():
                             )
                             conn.commit()
                             
-                            # Vider le formulaire après l'enregistrement réussi
-                            st.session_state.form_data = {key: '' for key in st.session_state.form_data}
-                            st.session_state.form_data['is_active'] = 'Yes'
-                            st.session_state.form_data['role_name'] = 'Agent'
-                            
+
+                            st.write("Avant réinitialisation:")
+                            for key, value in st.session_state.form_data.items():
+                                st.write(f"{key}: {value}")
+                                                        # Vider le formulaire après l'enregistrement réussi
+                           # Après l'enregistrement réussi, réinitialiser complètement les données du formulaire
+                            st.session_state.form_data.clear()  # Effacer les données existantes
+                            st.session_state.form_data.update({
+                                'ClientName': '',
+                                'username': '',
+                                'email': '',
+                                'address': '',
+                                'is_active': 'Yes',  # Valeur par défaut
+                                'identifier': '',
+                                'phone_number': '',
+                                'role_name': 'Agent',  # Rôle par défaut
+                                'assigned_city': '',
+                                "password_hash":'',
+                            })
+
+                            # Après réinitialisation
+                            st.write("\nAprès réinitialisation:")
+                            for key, value in st.session_state.form_data.items():
+                                st.write(f"{key}: {value}")
+                                            
                             # Définir le flag de succès à True pour afficher le message sur le prochain rendu
                             st.session_state.registration_success = True
                             
