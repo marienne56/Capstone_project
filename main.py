@@ -189,6 +189,8 @@ def main():
                     
                     # Charger les données synthétiques
                     df = load_synthetic_data(n_synthetic_records)
+                    
+                    st.dataframe(df)
             
             # Vérifiez si les données ont été chargées
             if df.empty:

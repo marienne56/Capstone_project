@@ -70,13 +70,11 @@ def login_page():
                 
                 result = conn.execute(check_query, {
                     "identifier": identifier,
-                    "password_hash": hash_password(password)  # Vérifier le hash du mot de passe
+                    "password_hash": hash_password(password) 
                 }).fetchone()
 
-                #st.write(f"DEBUG - Résultat SQL: {result}")  # Vérifier ce que renvoie la base de données
-
                 if result:
-                    st.session_state.client_name = result[3]  # Utilise l'index de 'ClientName'
+                    st.session_state.client_name = result[3] 
                     
                     st.session_state.identifier = result[2]
                     st.session_state.role_name = result[4]

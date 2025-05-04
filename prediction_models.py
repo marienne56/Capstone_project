@@ -318,8 +318,8 @@ def plot_residuals(y_true, y_pred, title="Analyse des résidus"):
 # Fonctions pour les métriques d'évaluation du modèle
 def evaluate_model(y_true, y_pred):
     """Calcule et retourne les métriques d'évaluation pour un modèle"""
-    mse = mean_squared_error(y_true, y_pred)
-    rmse = np.sqrt(mse)
+    # mse = mean_squared_error(y_true, y_pred)
+    # rmse = np.sqrt(mse)
     mae = mean_absolute_error(y_true, y_pred)
     r2 = r2_score(y_true, y_pred)
     
@@ -328,8 +328,8 @@ def evaluate_model(y_true, y_pred):
     mape = np.mean(np.abs((y_true[mask] - y_pred[mask]) / y_true[mask])) * 100 if np.any(mask) else np.nan
     
     return {
-        'MSE': mse,
-        'RMSE': rmse,
+        # 'MSE': mse,
+        # 'RMSE': rmse,
         'MAE': mae,
         'R²': r2,
         'MAPE (%)': mape
@@ -424,7 +424,7 @@ def plot_predicted_vs_actual(X, y_true, y_pred, title, x_label):
     st.plotly_chart(fig)
 
 def create_sidebar_filters(df, is_admin=False):
-    st.sidebar.markdown("## Filtres")
+    st.sidebar.markdown("## Filters")
     
     # Filtres communs pour tous les utilisateurs
     # Filtre Year
@@ -823,17 +823,7 @@ def apply_filters(df, selected_user, selected_year, selected_city, selected_clie
 
 
 def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
-    """
-    Simplified diagnostic function that only uses the Ridge model
-    and determines if the problem comes from the data.
-    
-    Args:
-        df_train: DataFrame containing training data
-        alpha: Regularization parameter for Ridge
-    
-    Returns:
-        dict: Diagnostic results
-    """
+   
     st.write("## 🔍 Ridge Model Diagnostic")
     
     # 1. DATA STRUCTURE ANALYSIS
@@ -956,15 +946,15 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
         from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
         
         train_metrics = {
-            'MSE': mean_squared_error(y_train, y_pred_train),
-            'RMSE': np.sqrt(mean_squared_error(y_train, y_pred_train)),
+            # 'MSE': mean_squared_error(y_train, y_pred_train),
+            # 'RMSE': np.sqrt(mean_squared_error(y_train, y_pred_train)),
             'MAE': mean_absolute_error(y_train, y_pred_train),
             'R²': r2_score(y_train, y_pred_train)
         }
         
         test_metrics = {
-            'MSE': mean_squared_error(y_test, y_pred_test),
-            'RMSE': np.sqrt(mean_squared_error(y_test, y_pred_test)),
+            # 'MSE': mean_squared_error(y_test, y_pred_test),
+            # 'RMSE': np.sqrt(mean_squared_error(y_test, y_pred_test)),
             'MAE': mean_absolute_error(y_test, y_pred_test),
             'R²': r2_score(y_test, y_pred_test)
         }
@@ -1013,10 +1003,16 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
             st.success(f"✅ **Good performance**: R² = {r2_test:.4f}. The model explains more than 60% of the variance.")
         
         # Analyze the gap between train and test
-        if r2_gap > 0.2:
-            st.warning(f"⚠️ **Possible overfitting**: Gap of {r2_gap:.4f} between training and test R².")
-        else:
+        if r2_gap <  0.05:
             st.success(f"✅ **No overfitting**: Acceptable gap of {r2_gap:.4f} between training and test R².")
+        elif 0.15 > r2_gap > 0.05:
+            st.success(f"✅ **Acceptable — some overfitting, but manageable**: Gap of {r2_gap:.4f} between training and test R².")
+        elif 0.2 > r2_gap > 0.15:
+            st.warning(f"⚠️ **Moderate overfitting — worth addressing**: Gap of {r2_gap:.4f} between training and test R².")
+        elif 0.2 < r2_gap:
+            st.warning(f"⚠️ **Strong overfitting — must be addressed**: Gap of {r2_gap:.4f} between training and test R².")
+        # else:
+        #     st.success(f"✅ **No overfitting**: Acceptable gap of {r2_gap:.4f} between training and test R².")
         
         # Analyze relative error
         if mae_relative > 50:
@@ -1048,8 +1044,8 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
         
         # Define custom scorers for CV
         r2_scorer = make_scorer(r2_score)
-        rmse_scorer = make_scorer(lambda y, y_pred: np.sqrt(mean_squared_error(y, y_pred)), 
-                                 greater_is_better=False)
+        # rmse_scorer = make_scorer(lambda y, y_pred: np.sqrt(mean_squared_error(y, y_pred)), 
+        #                          greater_is_better=False)
         mae_scorer = make_scorer(mean_absolute_error, greater_is_better=False)
         
         # Initialize KFold
@@ -1057,7 +1053,7 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
         
         # Lists to store metrics from each fold
         cv_r2_scores = []
-        cv_rmse_scores = []
+        #cv_rmse_scores = []
         cv_mae_scores = []
         
         # Perform cross-validation manually for detailed metrics
@@ -1075,23 +1071,23 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
             
             # Calculate metrics
             fold_r2 = r2_score(y_cv_test, y_cv_pred)
-            fold_rmse = np.sqrt(mean_squared_error(y_cv_test, y_cv_pred))
+            #fold_rmse = np.sqrt(mean_squared_error(y_cv_test, y_cv_pred))
             fold_mae = mean_absolute_error(y_cv_test, y_cv_pred)
             
             # Store metrics
             cv_r2_scores.append(fold_r2)
-            cv_rmse_scores.append(fold_rmse)
+            #cv_rmse_scores.append(fold_rmse)
             cv_mae_scores.append(fold_mae)
             
             # Display fold metrics
-            st.write(f"**Fold {fold_num}**: R² = {fold_r2:.4f}, RMSE = {fold_rmse:.4f}, MAE = {fold_mae:.4f}")
+            #st.write(f"**Fold {fold_num}**: R² = {fold_r2:.4f}, RMSE = {fold_rmse:.4f}, MAE = {fold_mae:.4f}")
             fold_num += 1
         
         # Calculate average CV metrics
         cv_avg_r2 = np.mean(cv_r2_scores)
         cv_std_r2 = np.std(cv_r2_scores)
-        cv_avg_rmse = np.mean(cv_rmse_scores)
-        cv_std_rmse = np.std(cv_rmse_scores)
+        # cv_avg_rmse = np.mean(cv_rmse_scores)
+        # cv_std_rmse = np.std(cv_rmse_scores)
         cv_avg_mae = np.mean(cv_mae_scores)
 
         # Calculate CV-based relative error
@@ -1111,26 +1107,26 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
         # Display average CV metrics
         st.write("#### Cross-Validation Summary")
         cv_metrics_df = pd.DataFrame({
-            'Métrique': ['R²', 'RMSE', 'MAE'],
-            'Moyenne': [cv_avg_r2, cv_avg_rmse, cv_avg_mae],
-            'Écart-type': [cv_std_r2, cv_std_rmse, cv_std_mae]
+            'Metric': ['R²', 'MAE'],
+            'Average': [cv_avg_r2,  cv_avg_mae],
+            'Standard deviation': [cv_std_r2, cv_std_mae]
         })
         st.table(cv_metrics_df.style.format({
-            'Moyenne': '{:.4f}',
-            'Écart-type': '{:.4f}'
+            'Average': '{:.4f}',
+            'Standard deviation': '{:.4f}'
         }))
         
         # Visualize CV results
         cv_results_df = pd.DataFrame({
             'Fold': list(range(1, actual_cv_folds + 1)),
             'R²': cv_r2_scores,
-            'RMSE': cv_rmse_scores,
+            #'RMSE': cv_rmse_scores,
             'MAE': cv_mae_scores
         })
         
         # Create a dataframe for plotting in long format
         plot_data = []
-        for metric in ['R²', 'RMSE', 'MAE']:
+        for metric in ['R²', 'MAE']:
             for fold, value in enumerate(cv_results_df[metric], 1):
                 plot_data.append({
                     'Fold': fold,
@@ -1155,18 +1151,18 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
         )
         st.plotly_chart(fig)
         
-        # Analyze CV stability
-        if cv_std_r2 > 0.15:
-            st.warning(f"⚠️ **High CV variability**: R² standard deviation of {cv_std_r2:.4f} indicates unstable model performance across different data subsets.")
-        else:
-            st.success(f"✅ **Stable CV performance**: R² standard deviation of {cv_std_r2:.4f} indicates consistent model performance across different data subsets.")
+        # # Analyze CV stability
+        # if cv_std_r2 > 0.15:
+        #     st.warning(f"⚠️ **High CV variability**: R² standard deviation of {cv_std_r2:.4f} indicates unstable model performance across different data subsets.")
+        # else:
+        #     st.success(f"✅ **Stable CV performance**: R² standard deviation of {cv_std_r2:.4f} indicates consistent model performance across different data subsets.")
         
        
 
-        # Warning if very low performance
-        if cv_avg_r2 < 0.2:
-            st.write("\n### ⚠️ Important note:")
-            st.write(f"With a cross-validated R² of {cv_avg_r2:.4f}, current predictions are **not reliable**. It is recommended to use these predictions with extreme caution.")
+        # # Warning if very low performance
+        # if cv_avg_r2 < 0.2:
+        #     st.write("\n### ⚠️ Important note:")
+        #     st.write(f"With a cross-validated R² of {cv_avg_r2:.4f}, current predictions are **not reliable**. It is recommended to use these predictions with extreme caution.")
         
 
 
@@ -1178,7 +1174,7 @@ def run_model_diagnostics_ridge(df_train, alpha=1.0,cv_folds=5):
             "mae_relative": mae_relative,
             "cv_results": {
                 "r2_scores": cv_r2_scores,
-                "rmse_scores": cv_rmse_scores,
+                #"rmse_scores": cv_rmse_scores,
                 "mae_scores": cv_mae_scores
             }
         }
@@ -1629,8 +1625,9 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
                     # Envoyer l'email
                     email_sent = send_billing_alert_email(user_email, email_subject, email_message)
                     if email_sent:
-                        #st.info(f"📧 An alert email has been sent to {user_email}")
+                        st.info(f"📧 An alert email has been sent to {user_email}")
                         alert_sent = True
+                    else:st.error(f"❌ Failed to send alert email to {user_email}")
                 else:
                     st.warning("⚠️ No email configured for this user. There is an alert but email is not sent.")
             else:
@@ -1639,12 +1636,12 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
             # Cas où aucun seuil n'est défini: vérifier l'augmentation significative
             st.info("No threshold is defined.")
             
-            if next_period_billing >= current_billing:
+            if next_period_billing > current_billing:
                 # Calcule le pourcentage d'augmentation
                 percent_increase = ((next_period_billing - current_billing) / current_billing * 100) if current_billing > 0 else 0
                 
                 # Alerte seulement si l'augmentation est supérieure à 10%
-                if percent_increase >= 0:
+                if percent_increase > 0:
                     st.warning(f"⚠️ you're bound to go over your consumption this {current_period_name}.")
                     
                     # Créer une alerte en base de données
@@ -1652,6 +1649,7 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
                         selected_user,
                         'billing_increase',
                         f"Predicted billing of {next_period_billing:.2f} FCFA for {next_period_name} {next_period_year} is {percent_increase:.1f}% higher than your current billing of {current_billing:.2f} FCFA."
+                        
                     )
                     
                     # Envoi automatique de l'email
@@ -1674,12 +1672,38 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
                         </body>
                         </html>
                         """
-                        
-                        # Envoyer l'email
-                        email_sent = send_billing_alert_email(user_email, email_subject, email_message)
-                        if email_sent:
-                            #st.info(f"📧 An alert email has been sent to {user_email}")
-                            alert_sent = True
+                        # Debug print to check email parameters
+                        print(f"Attempting to send billing increase email to: {user_email}")
+                        print(f"Subject: {email_subject}")
+                         # Envoyer l'email avec gestion d'erreurs
+                        try:
+                            email_sent = send_billing_alert_email(user_email, email_subject, email_message)
+                            if email_sent:
+                                st.info(f"📧 An alert email has been sent to {user_email}")
+                                alert_sent = True
+                            else:
+                                st.error(f"❌ Failed to send billing increase alert email to {user_email}")
+                                
+                                # Ajouter un test direct pour déboguer
+                                st.warning("Testing email functionality...")
+                                test_subject = "Test Email"
+                                test_message = """
+                                <html>
+                                <body>
+                                <h2>Test Email</h2>
+                                <p>This is a test email to verify the email sending functionality.</p>
+                                </body>
+                                </html>
+                                """
+                                test_sent = send_billing_alert_email(user_email, test_subject, test_message)
+                                if test_sent:
+                                    st.success("Test email sent successfully! The issue might be with the content.")
+                                else:
+                                    st.error("Test email failed as well. The issue is with the email sending function.")
+                        except Exception as e:
+                            st.error(f"❌ Error sending email: {str(e)}")
+                            print(f"Exception sending increase email: {str(e)}")
+                            
                     else:
                         st.warning("⚠️ No email configured for this user. There is an alert  but email is not sent.")
                 else:
@@ -1730,14 +1754,14 @@ def predict_by_period(df, period_type, prediction_timeframe, selected_year, sele
         st.write(f"↘️ The prediction shows a **slight decrease** of {abs(variation_pct):.1f}% pour {time_unit} {next_period_name} compared to the current data.")
     
     # Fiabilité de la prédiction
-    st.write("#### Prediction Reliability")
+    # st.write("#### Prediction Reliability")
     
-    if len(df_train) < 10:
-        st.write("⚠️ Prediction based on **limited data** (<10 points). Results should be interpreted with caution.")
-    elif abs(variation_pct) > 30:
-        st.write("⚠️ The **significant variation** suggests that the prediction should be interpreted with caution.")
-    else:
-        st.write("✅ The prediction seems reasonable given the available data.")
+    # if len(df_train) < 10:
+    #     st.write("⚠️ Prediction based on **limited data** (<10 points). Results should be interpreted with caution.")
+    # elif abs(variation_pct) > 30:
+    #     st.write("⚠️ The **significant variation** suggests that the prediction should be interpreted with caution.")
+    # else:
+    #     st.write("✅ The prediction seems reasonable given the available data.")
     
     return model, current_period, next_period, next_period_prediction
 def predict_by_city(df, prediction_timeframe, selected_year):
@@ -1992,8 +2016,8 @@ def predict_by_city(df, prediction_timeframe, selected_year):
         st.info("Model training error:")
         #Approche simplifiée en cas d'erreur
         metrics = {
-             'MSE': np.nan,
-             'RMSE': np.nan,
+            #  'MSE': np.nan,
+            #  'RMSE': np.nan,
              'MAE': np.nan,
              'R²': np.nan,
              'MAPE (%)': np.nan
@@ -2496,8 +2520,8 @@ def predict_by_client_type(df, prediction_timeframe, selected_year):
         st.info("Using of a simplified approach")
         # Approche simplifiée en cas d'erreur
         metrics = {
-            'MSE': np.nan,
-            'RMSE': np.nan,
+            # 'MSE': np.nan,
+            # 'RMSE': np.nan,
             'MAE': np.nan,
             'R²': np.nan,
             'MAPE (%)': np.nan
