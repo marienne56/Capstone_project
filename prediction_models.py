@@ -2236,24 +2236,24 @@ def predict_by_city(df, prediction_timeframe, selected_year):
     
  
 
-    # Fiabilité de la prédiction
-    st.write("#### Prediction Reliability")
+    # # Fiabilité de la prédiction
+    # st.write("#### Prediction Reliability")
 
     
-    if len(df_train) < 10:
-        st.write("⚠️ Prediction based on **limited data** (<10 points). The results should be interpreted with caution.")
-    elif abs(variation_pct) > 20:
-        st.write("⚠️ The **significant variation** indicates a prediction that should be interpreted carefully.")
-    else:
-        st.write("✅ The prediction seems reasonable given the available data.")
+    # if len(df_train) < 10:
+    #     st.write("⚠️ Prediction based on **limited data** (<10 points). The results should be interpreted with caution.")
+    # elif abs(variation_pct) > 20:
+    #     st.write("⚠️ The **significant variation** indicates a prediction that should be interpreted carefully.")
+    # else:
+    #     st.write("✅ The prediction seems reasonable given the available data.")
 
     
-    # Factors influencing reliability
-    st.write("**Factors Influencing Prediction Reliability:**")
-    st.write("- Amount of available data: " + ("✅ Sufficient" if len(df_train) > 50 else "⚠️ Limited"))
-    st.write("- Diversity of cities: " + ("✅ Good" if len(cities) > 5 else "⚠️ Limited"))
-    st.write("- Regularity of temporal data: " + ("✅ Regular" if len(df_train) > len(cities) * 3 else "⚠️ Irregular"))
-    st.write("- Presence of extreme values: " + ("⚠️ Significant" if outliers_count/len(df_train)*100 > 10 else "✅ Moderate"))
+    # # Factors influencing reliability
+    # st.write("**Factors Influencing Prediction Reliability:**")
+    # st.write("- Amount of available data: " + ("✅ Sufficient" if len(df_train) > 50 else "⚠️ Limited"))
+    # st.write("- Diversity of cities: " + ("✅ Good" if len(cities) > 5 else "⚠️ Limited"))
+    # st.write("- Regularity of temporal data: " + ("✅ Regular" if len(df_train) > len(cities) * 3 else "⚠️ Irregular"))
+    # st.write("- Presence of extreme values: " + ("⚠️ Significant" if outliers_count/len(df_train)*100 > 10 else "✅ Moderate"))
     return model, cities, city_pred_df
 # Fonction pour la prédiction par type de client
 def predict_by_client_type(df, prediction_timeframe, selected_year):
@@ -2760,12 +2760,12 @@ def predict_by_client_type(df, prediction_timeframe, selected_year):
     st.write("4. **Optimizing pricing** based on demand elasticity by segment")
     st.write("5. **Implementing commercial monitoring** for client types with significant variations")
     
-    # Factors influencing prediction reliability
-    st.write("**Factors Influencing Prediction Reliability:**")
-    st.write("- Available data quantity: " + ("✅ Sufficient" if len(df_train) > 50 else "⚠️ Limited"))
-    st.write("- Diversity of client types: " + ("✅ Good" if len(client_types) > 3 else "⚠️ Limited"))
-    st.write("- Regularity of temporal data: " + ("✅ Regular" if len(df_train) > len(client_types) * 3 else "⚠️ Irregular"))
-    st.write("- Presence of extreme values: " + ("⚠️ Significant" if outliers_count/len(df_train)*100 > 10 else "✅ Moderate"))
+    # # Factors influencing prediction reliability
+    # st.write("**Factors Influencing Prediction Reliability:**")
+    # st.write("- Available data quantity: " + ("✅ Sufficient" if len(df_train) > 50 else "⚠️ Limited"))
+    # st.write("- Diversity of client types: " + ("✅ Good" if len(client_types) > 3 else "⚠️ Limited"))
+    # st.write("- Regularity of temporal data: " + ("✅ Regular" if len(df_train) > len(client_types) * 3 else "⚠️ Irregular"))
+    # st.write("- Presence of extreme values: " + ("⚠️ Significant" if outliers_count/len(df_train)*100 > 10 else "✅ Moderate"))
 
 
     return model, client_types, client_type_pred_df
