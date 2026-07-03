@@ -1,54 +1,57 @@
-# Projet Capstone
+# Capstone Project
 
-Ce projet a été développé en utilisant **Python** comme langage principal. Il s'agit d'une application interactive construite avec **Streamlit**, une bibliothèque Python permettant de créer des interfaces utilisateur pour des projets de science des données et d'analyse.
+This project was developed using **Python** as the primary programming language. It is an interactive web application built with **Streamlit**, a Python framework for creating data science and analytics applications.
 
-## Technologies utilisées
+## Technologies Used
 
-1. **Python** : Langage principal utilisé pour le développement.
-2. **Streamlit** : Framework pour créer des applications web interactives.
-3. **Matplotlib** : Bibliothèque pour la visualisation de données.
-4. **Pandas** : Utilisé pour la manipulation et l'analyse des données.
-5. **SQLAlchemy** : Utilisé pour la gestion des connexions à la base de données.
-6. **Streamlit-Option-Menu** : Bibliothèque pour créer des menus de navigation interactifs.
-7. **HTML/CSS** : Utilisé pour personnaliser le style et l'apparence de l'application.
+- **Python** – Primary programming language.
+- **Streamlit** – Framework for building interactive web applications.
+- **Matplotlib** – Library for data visualization.
+- **Pandas** – Used for data manipulation and analysis.
+- **SQLAlchemy** – Used for database connectivity and management.
+- **Streamlit-Option-Menu** – Library for creating interactive navigation menus.
+- **HTML/CSS** – Used to customize the application's layout and styling.
 
-## Fonctionnalités principales
+## Key Features
 
-- **Authentification** : Gestion des connexions utilisateur avec des rôles spécifiques (admin, utilisateur, etc.).
-- **Tableaux de bord** : Visualisation des données et analyses interactives.
-- **Prédictions** : Modèles de prédiction pour la consommation de données.
-- **Gestion des comptes** : Création, modification et affichage des comptes utilisateurs.
-- **Base de données** : Connexion et gestion des données via une base de données relationnelle.
+- **User Authentication** – Secure login system with role-based access (e.g., admin, user).
+- **Interactive Dashboards** – Data visualization and analytical dashboards.
+- **Predictive Analytics** – Prediction models for water consumption analysis.
+- **User Account Management** – Create, edit, and manage user accounts.
+- **Database Integration** – Store and manage data using a relational database.
 
-## Prérequis
+## Prerequisites
 
-- Python 3.8 ou supérieur
-- Les bibliothèques suivantes doivent être installées :
-  ```bash
-  pip install streamlit pandas matplotlib sqlalchemy streamlit-option-menu
-  ```
+- Python 3.8 or later
 
-## Lancer le projet
+Install the required libraries:
 
-Pour exécuter l'application Streamlit, suivez les étapes ci-dessous :
+```bash
+pip install streamlit pandas matplotlib sqlalchemy streamlit-option-menu
+```
 
-1. **Assurez-vous que toutes les dépendances sont installées** :
-   Installez les bibliothèques nécessaires en exécutant la commande suivante dans le terminal :
+## Running the Project
+
+1. **Install the project dependencies**
+
+   If a `requirements.txt` file is available, run:
+
    ```bash
    pip install -r requirements.txt
    ```
-   Si vous n'avez pas de fichier `requirements.txt`, utilisez la commande mentionnée dans la section "Prérequis".
 
+   Otherwise, install the required packages listed above.
 
-3. **Lancez l'application Streamlit** :
-   Exécutez la commande suivante pour démarrer l'application :
+2. **Start the Streamlit application**
+
    ```bash
    streamlit run main.py
    ```
 
-4. **Ouvrez l'application dans votre navigateur** :
-   Une fois la commande exécutée, un lien sera affiché dans le terminal (par exemple, `http://localhost:8501`). Cliquez sur ce lien ou copiez-le dans votre navigateur pour accéder à l'application.
+3. **Open the application**
 
-## Auteur
+   After running the command, Streamlit will display a local URL (for example, `http://localhost:8501`). Open this link in your web browser to access the application.
 
-Ce projet a été développé dans le cadre d'un stage de fin d'études.
+## Author
+
+This project was developed as part of a final-year internship and capstone project.
